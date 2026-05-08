@@ -2,51 +2,69 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    >
 
-    <title>Pokemon Quiz Maze</title>
+<meta charset="UTF-8">
 
-    <link rel="stylesheet" href="style.css">
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<title>Pokemon Quiz Maze</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
-    <canvas id="game"></canvas>
+<canvas id="game"></canvas>
 
-    <div id="mobileControls">
+<div id="hud">
 
-        <button id="upBtn">▲</button>
+<div id="hudTitle">
+Pokemon Quiz Maze
+</div>
 
-        <div class="middleRow">
-            <button id="leftBtn">◀</button>
-            <button id="rightBtn">▶</button>
-        </div>
+<div id="progressText">
+Progress: 0/13
+</div>
 
-        <button id="downBtn">▼</button>
+</div>
 
-    </div>
+<div id="mobileControls">
 
-    <button id="interactBtn">
-        E
-    </button>
+<button id="upBtn">▲</button>
 
-    <div id="questionModal" class="hidden">
+<div class="middleRow">
 
-        <div id="questionBox">
+<button id="leftBtn">◀</button>
 
-            <div id="questionText"></div>
+<button id="rightBtn">▶</button>
 
-            <div id="answers"></div>
+</div>
 
-        </div>
+<button id="downBtn">▼</button>
 
-    </div>
+</div>
 
-    <script src="game.js"></script>
+<button id="interactBtn">
+E
+</button>
+
+<div id="questionModal" class="hidden">
+
+<div id="questionBox">
+
+<div id="questionText"></div>
+
+<div id="answers"></div>
+
+</div>
+
+</div>
+
+<script src="game.js"></script>
 
 </body>
 
