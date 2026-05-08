@@ -2,19 +2,51 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
 
-  <title>Pokemon Quiz Maze</title>
+    <title>Pokemon Quiz Maze</title>
 
-  <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <canvas id="game"></canvas>
+    <canvas id="game"></canvas>
 
-  <script src="game.js"></script>
+    <div id="mobileControls">
+
+        <button id="upBtn">▲</button>
+
+        <div class="middleRow">
+            <button id="leftBtn">◀</button>
+            <button id="rightBtn">▶</button>
+        </div>
+
+        <button id="downBtn">▼</button>
+
+    </div>
+
+    <button id="interactBtn">
+        E
+    </button>
+
+    <div id="questionModal" class="hidden">
+
+        <div id="questionBox">
+
+            <div id="questionText"></div>
+
+            <div id="answers"></div>
+
+        </div>
+
+    </div>
+
+    <script src="game.js"></script>
 
 </body>
 

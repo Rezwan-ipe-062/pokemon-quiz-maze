@@ -5,36 +5,50 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 window.addEventListener("resize", () => {
+
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+
 });
 
 const world = {
+
     width: 4000,
     height: 2500
+
 };
 
 const camera = {
+
     x: 0,
     y: 0
+
 };
 
 const keys = {};
 
 window.addEventListener("keydown", e => {
+
     keys[e.key.toLowerCase()] = true;
+
 });
 
 window.addEventListener("keyup", e => {
+
     keys[e.key.toLowerCase()] = false;
+
 });
 
 const player = {
+
     x: 300,
     y: 1200,
+
     width: 40,
     height: 55,
+
     speed: 5
+
 };
 
 const nodes = [
@@ -173,8 +187,10 @@ function updatePlayer(){
     }
 
     if(canMoveTo(nextX, nextY)){
+
         player.x = nextX;
         player.y = nextY;
+
     }
 
 }
@@ -187,58 +203,86 @@ function canMoveTo(x, y){
         const end = nodes[path[1]];
 
         const dist = distanceToLineSegment(
+
             x,
             y,
+
             start.x,
             start.y,
+
             end.x,
             end.y
+
         );
 
         if(dist < 60){
+
             return true;
+
         }
 
     }
 
     return false;
+
 }
 
-function distanceToLineSegment(px, py, x1, y1, x2, y2){
+function distanceToLineSegment(
+    px,
+    py,
+    x1,
+    y1,
+    x2,
+    y2
+){
 
     const A = px - x1;
     const B = py - y1;
+
     const C = x2 - x1;
     const D = y2 - y1;
 
     const dot = A * C + B * D;
+
     const lenSq = C * C + D * D;
 
     let param = -1;
 
     if(lenSq !== 0){
+
         param = dot / lenSq;
+
     }
 
-    let xx, yy;
+    let xx;
+    let yy;
 
     if(param < 0){
+
         xx = x1;
         yy = y1;
+
     }
     else if(param > 1){
+
         xx = x2;
         yy = y2;
+
     }
     else{
+
         xx = x1 + param * C;
         yy = y1 + param * D;
+
     }
 
     const dx = px - xx;
     const dy = py - yy;
 
-    return Math.sqrt(dx * dx + dy * dy);
+    return Math.sqrt(
+        dx * dx + dy * dy
+    );
+
 }
 
 function updateCamera(){
@@ -248,33 +292,55 @@ function updateCamera(){
 
     camera.x = Math.max(
         0,
-        Math.min(world.width - canvas.width, camera.x)
+        Math.min(
+            world.width - canvas.width,
+            camera.x
+        )
     );
 
     camera.y = Math.max(
         0,
-        Math.min(world.height - canvas.height, camera.y)
+        Math.min(
+            world.height - canvas.height,
+            camera.y
+        )
     );
+
 }
 
 function drawBackground(){
 
-    for(let x = 0; x < world.width; x += 80){
+    for(
+        let x = 0;
+        x < world.width;
+        x += 80
+    ){
 
-        for(let y = 0; y < world.height; y += 80){
+        for(
+            let y = 0;
+            y < world.height;
+            y += 80
+        ){
 
             if((x + y) % 160 === 0){
+
                 ctx.fillStyle = "#7ac74f";
+
             }
             else{
+
                 ctx.fillStyle = "#6db44a";
+
             }
 
             ctx.fillRect(
+
                 x - camera.x,
                 y - camera.y,
+
                 80,
                 80
+
             );
 
         }
@@ -289,7 +355,11 @@ function drawPaths(){
 
     ctx.lineCap = "round";
 
-    for(let i = 0; i < paths.length; i++){
+    for(
+        let i = 0;
+        i < paths.length;
+        i++
+    ){
 
         const path = paths[i];
 
@@ -299,10 +369,14 @@ function drawPaths(){
         const end = nodes[path[1]];
 
         if(gate.completed){
+
             ctx.strokeStyle = "#55efc4";
+
         }
         else{
+
             ctx.strokeStyle = "#c19a6b";
+
         }
 
         ctx.beginPath();
@@ -332,11 +406,15 @@ function drawNodes(){
         ctx.beginPath();
 
         ctx.arc(
+
             node.x - camera.x,
             node.y - camera.y,
+
             45,
+
             0,
             Math.PI * 2
+
         );
 
         ctx.fill();
@@ -346,11 +424,15 @@ function drawNodes(){
         ctx.beginPath();
 
         ctx.arc(
+
             node.x - camera.x,
             node.y - camera.y,
+
             22,
+
             0,
             Math.PI * 2
+
         );
 
         ctx.fill();
@@ -361,17 +443,28 @@ function drawNodes(){
 
 function drawTrees(){
 
-    for(let x = 0; x < world.width; x += 400){
+    for(
+        let x = 0;
+        x < world.width;
+        x += 400
+    ){
 
-        for(let y = 0; y < world.height; y += 400){
+        for(
+            let y = 0;
+            y < world.height;
+            y += 400
+        ){
 
             ctx.fillStyle = "#8b5a2b";
 
             ctx.fillRect(
+
                 x - camera.x + 20,
                 y - camera.y + 40,
+
                 25,
                 50
+
             );
 
             ctx.fillStyle = "#2e8b57";
@@ -379,11 +472,15 @@ function drawTrees(){
             ctx.beginPath();
 
             ctx.arc(
+
                 x - camera.x + 30,
                 y - camera.y + 30,
+
                 55,
+
                 0,
                 Math.PI * 2
+
             );
 
             ctx.fill();
@@ -399,19 +496,25 @@ function drawPlayer(){
     ctx.fillStyle = "#111";
 
     ctx.fillRect(
+
         player.x - camera.x,
         player.y - camera.y,
+
         player.width,
         player.height
+
     );
 
     ctx.fillStyle = "#ffffff";
 
     ctx.fillRect(
+
         player.x - camera.x,
         player.y - camera.y,
+
         player.width,
         22
+
     );
 
     ctx.fillStyle = "#ffcc99";
@@ -419,11 +522,15 @@ function drawPlayer(){
     ctx.beginPath();
 
     ctx.arc(
+
         player.x - camera.x + 20,
         player.y - camera.y - 10,
+
         16,
+
         0,
         Math.PI * 2
+
     );
 
     ctx.fill();
@@ -432,7 +539,11 @@ function drawPlayer(){
 
 function drawGateIndicators(){
 
-    for(let i = 0; i < gates.length; i++){
+    for(
+        let i = 0;
+        i < gates.length;
+        i++
+    ){
 
         const gate = gates[i];
 
@@ -443,19 +554,28 @@ function drawGateIndicators(){
         const start = nodes[path[0]];
         const end = nodes[path[1]];
 
-        const midX = (start.x + end.x) / 2;
-        const midY = (start.y + end.y) / 2;
+        const midX = (
+            start.x + end.x
+        ) / 2;
+
+        const midY = (
+            start.y + end.y
+        ) / 2;
 
         ctx.fillStyle = "#e74c3c";
 
         ctx.beginPath();
 
         ctx.arc(
+
             midX - camera.x,
             midY - camera.y,
+
             20,
+
             0,
             Math.PI * 2
+
         );
 
         ctx.fill();
@@ -463,16 +583,21 @@ function drawGateIndicators(){
         if(activeGate === gate){
 
             ctx.strokeStyle = "#ffffff";
+
             ctx.lineWidth = 5;
 
             ctx.beginPath();
 
             ctx.arc(
+
                 midX - camera.x,
                 midY - camera.y,
+
                 35,
+
                 0,
                 Math.PI * 2
+
             );
 
             ctx.stroke();
@@ -509,7 +634,10 @@ function drawHUD(){
     ).length;
 
     ctx.fillText(
-        "Progress: " + cleared + "/" + gates.length,
+        "Progress: " +
+        cleared +
+        "/" +
+        gates.length,
         40,
         95
     );
@@ -524,26 +652,39 @@ function checkGateCollision(){
 
         if(gate.completed) continue;
 
-        const path = paths[gate.pathIndex];
+        const path = paths[
+            gate.pathIndex
+        ];
 
         const start = nodes[path[0]];
         const end = nodes[path[1]];
 
-        const midX = (start.x + end.x) / 2;
-        const midY = (start.y + end.y) / 2;
+        const midX = (
+            start.x + end.x
+        ) / 2;
+
+        const midY = (
+            start.y + end.y
+        ) / 2;
 
         const dx = player.x - midX;
         const dy = player.y - midY;
 
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        const dist = Math.sqrt(
+            dx * dx + dy * dy
+        );
 
         if(dist < 80){
 
             activeGate = gate;
 
-            if(keys["e"] && !questionOpen){
+            if(
+                keys["e"] &&
+                !questionOpen
+            ){
 
                 openQuestion(gate);
+
             }
 
         }
@@ -556,45 +697,95 @@ function openQuestion(gate){
 
     questionOpen = true;
 
-    const q = gate.question;
-
-    const answer = prompt(
-
-        q.q +
-
-        "\\n\\n1. " + q.options[0] +
-
-        "\\n2. " + q.options[1] +
-
-        "\\n3. " + q.options[2] +
-
-        "\\n4. " + q.options[3]
-
+    const modal = document.getElementById(
+        "questionModal"
     );
 
-    if(Number(answer) - 1 === q.correct){
+    const questionText = document.getElementById(
+        "questionText"
+    );
 
-        alert("Correct!");
+    const answers = document.getElementById(
+        "answers"
+    );
 
-        gate.completed = true;
-    }
-    else{
+    modal.classList.remove("hidden");
 
-        alert("Wrong!");
+    const q = gate.question;
 
-        player.x -= 200;
-    }
+    questionText.innerText = q.q;
 
-    questionOpen = false;
+    answers.innerHTML = "";
+
+    q.options.forEach((option,index)=>{
+
+        const btn = document.createElement(
+            "button"
+        );
+
+        btn.className = "answerBtn";
+
+        btn.innerText = option;
+
+        btn.onclick = ()=>{
+
+            if(index === q.correct){
+
+                btn.classList.add(
+                    "correct"
+                );
+
+                gate.completed = true;
+
+                setTimeout(()=>{
+
+                    modal.classList.add(
+                        "hidden"
+                    );
+
+                    questionOpen = false;
+
+                },700);
+
+            }
+            else{
+
+                btn.classList.add(
+                    "wrong"
+                );
+
+                player.x -= 200;
+
+                setTimeout(()=>{
+
+                    modal.classList.add(
+                        "hidden"
+                    );
+
+                    questionOpen = false;
+
+                },700);
+
+            }
+
+        };
+
+        answers.appendChild(btn);
+
+    });
+
 }
 
 function render(){
 
     ctx.clearRect(
+
         0,
         0,
+
         canvas.width,
         canvas.height
+
     );
 
     drawBackground();
@@ -623,8 +814,80 @@ function gameLoop(){
 
     render();
 
-    requestAnimationFrame(gameLoop);
+    requestAnimationFrame(
+        gameLoop
+    );
 
 }
 
 gameLoop();
+
+const mobileButtons = [
+
+    ["upBtn","w"],
+    ["downBtn","s"],
+    ["leftBtn","a"],
+    ["rightBtn","d"]
+
+];
+
+mobileButtons.forEach(button=>{
+
+    const element = document.getElementById(
+        button[0]
+    );
+
+    const key = button[1];
+
+    element.addEventListener(
+
+        "touchstart",
+
+        e=>{
+
+            e.preventDefault();
+
+            keys[key] = true;
+
+        }
+
+    );
+
+    element.addEventListener(
+
+        "touchend",
+
+        e=>{
+
+            e.preventDefault();
+
+            keys[key] = false;
+
+        }
+
+    );
+
+});
+
+document.getElementById(
+    "interactBtn"
+).addEventListener(
+
+    "touchstart",
+
+    e=>{
+
+        e.preventDefault();
+
+        if(
+            activeGate &&
+            !questionOpen
+        ){
+
+            openQuestion(activeGate);
+
+        }
+
+    }
+
+);
