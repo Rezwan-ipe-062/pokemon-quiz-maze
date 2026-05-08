@@ -1,71 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="bn">
 <head>
-
-<meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
->
-
-<title>Pokemon Quiz Maze</title>
-
-<link rel="stylesheet" href="style.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Dragon's Breath | Labyrinth of Seals</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="ui-layer">
+            <div id="screen-loading" class="screen active">
+                <div class="loader-content">
+                    <h1 class="pixel-text">প্রবেশপথ খুলছে...</h1>
+                    <div class="progress-bar"><div id="load-progress"></div></div>
+                </div>
+            </div>
 
-<canvas id="game"></canvas>
+            <div id="screen-title" class="screen">
+                <div class="logo-area">
+                    <h1 class="pixel-text title-glow">THE DRAGON'S BREATH</h1>
+                    <p class="subtitle">ল্যাবিরিন্থ অফ সিলস</p>
+                </div>
+                <button id="btn-start" class="rpg-btn">অভিযান শুরু করুন</button>
+            </div>
 
-<div id="hud">
+            <div id="screen-char-select" class="screen">
+                <h2 class="pixel-text">বীর যোদ্ধা নির্বাচন করুন</h2>
+                <div class="char-grid">
+                    <div class="char-card" data-char="boy">
+                        <div class="sprite-preview boy"></div>
+                        <span>ছেলে যোদ্ধা</span>
+                    </div>
+                    <div class="char-card" data-char="girl">
+                        <div class="sprite-preview girl"></div>
+                        <span>মেয়ে যোদ্ধা</span>
+                    </div>
+                </div>
+            </div>
 
-<div id="hudTitle">
-Pokemon Quiz Maze
-</div>
+            <div id="hud" class="hidden">
+                <div class="timer-box">
+                    <div class="timer-label">ড্রাগন জাগছে: <span id="timer-value">20:00</span></div>
+                    <div class="timer-bar"><div id="timer-fill"></div></div>
+                </div>
+                <div id="minimap-container">
+                    <canvas id="minimapCanvas"></canvas>
+                </div>
+                <div id="mobile-controls">
+                    <div id="joystick-base"><div id="joystick-knob"></div></div>
+                    <button id="btn-interact" class="touch-btn">Q</button>
+                </div>
+                <div id="interaction-hint" class="hidden">প্রবেশ করতে 'Q' চাপুন</div>
+            </div>
 
-<div id="progressText">
-Progress: 0/13
-</div>
+            <div id="modal-quiz" class="modal hidden">
+                <div class="modal-content">
+                    <h3 id="quiz-header">প্রাচীন জাদু সিল</h3>
+                    <p id="quiz-question"></p>
+                    <div id="quiz-options"></div>
+                </div>
+            </div>
 
-</div>
-
-<div id="mobileControls">
-
-<button id="upBtn">▲</button>
-
-<div class="middleRow">
-
-<button id="leftBtn">◀</button>
-
-<button id="rightBtn">▶</button>
-
-</div>
-
-<button id="downBtn">▼</button>
-
-</div>
-
-<button id="interactBtn">
-E
-</button>
-
-<div id="questionModal" class="hidden">
-
-<div id="questionBox">
-
-<div id="questionText"></div>
-
-<div id="answers"></div>
-
-</div>
-
-</div>
-
-<script src="game.js"></script>
-
+            <div id="screen-end" class="screen">
+                <h1 id="end-title" class="pixel-text"></h1>
+                <p id="end-message"></p>
+                <div id="stats"></div>
+                <button onclick="location.reload()" class="rpg-btn">আবার খেলুন</button>
+            </div>
+        </div>
+    </div>
+    <script src="game.js"></script>
 </body>
-
 </html>
