@@ -4,6 +4,11 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
 const world = {
     width: 4000,
     height: 2500
@@ -24,11 +29,6 @@ window.addEventListener("keyup", e => {
     keys[e.key.toLowerCase()] = false;
 });
 
-window.addEventListener("resize", () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-});
-
 const player = {
     x: 300,
     y: 1200,
@@ -38,6 +38,7 @@ const player = {
 };
 
 const nodes = [
+
     { x: 300, y: 1200 },
 
     { x: 700, y: 900 },
@@ -53,9 +54,11 @@ const nodes = [
     { x: 2400, y: 1200 },
 
     { x: 3200, y: 1200 }
+
 ];
 
 const paths = [
+
     [0,1],
     [0,2],
 
@@ -74,9 +77,81 @@ const paths = [
     [7,8],
 
     [8,9]
+
 ];
 
+const questions = [
+
+    {
+        q: "রাস্তা পার হওয়ার সময় কোন দিকে তাকাতে হয়?",
+        options: [
+            "শুধু সামনে",
+            "ডানে ও বামে",
+            "চোখ বন্ধ",
+            "উপরে"
+        ],
+        correct: 1
+    },
+
+    {
+        q: "আগুন লাগলে কাকে ডাকতে হয়?",
+        options: [
+            "দমকল",
+            "রিকশা",
+            "বন্ধু",
+            "কেউ না"
+        ],
+        correct: 0
+    },
+
+    {
+        q: "তড়িতাহত হলে প্রথম কাজ কী?",
+        options: [
+            "পানি ঢালা",
+            "মেইন সুইচ বন্ধ",
+            "দৌড়ানো",
+            "চিৎকার"
+        ],
+        correct: 1
+    },
+
+    {
+        q: "সাপে কাটলে কী করা উচিত?",
+        options: [
+            "দৌড়ানো",
+            "ওঝার কাছে যাওয়া",
+            "শান্ত থাকা",
+            "লাফানো"
+        ],
+        correct: 2
+    }
+
+];
+
+const gates = [];
+
+for(let i = 0; i < paths.length; i++){
+
+    gates.push({
+
+        pathIndex: i,
+
+        completed: false,
+
+        question: questions[
+            i % questions.length
+        ]
+
+    });
+
+}
+
+let activeGate = null;
+let questionOpen = false;
+
 function updatePlayer(){
+
+    if(questionOpen) return;
 
     let nextX = player.x;
     let nextY = player.y;
@@ -211,14 +286,24 @@ function drawBackground(){
 function drawPaths(){
 
     ctx.lineWidth = 90;
-    ctx.strokeStyle = "#c19a6b";
 
     ctx.lineCap = "round";
 
-    for(const path of paths){
+    for(let i = 0; i < paths.length; i++){
+
+        const path = paths[i];
+
+        const gate = gates[i];
 
         const start = nodes[path[0]];
         const end = nodes[path[1]];
+
+        if(gate.completed){
+            ctx.strokeStyle = "#55efc4";
+        }
+        else{
+            ctx.strokeStyle = "#c19a6b";
+        }
 
         ctx.beginPath();
 
@@ -233,15 +318,14 @@ function drawPaths(){
         );
 
         ctx.stroke();
+
     }
 
 }
 
 function drawNodes(){
 
-    for(let i = 0; i < nodes.length; i++){
-
-        const node = nodes[i];
+    for(const node of nodes){
 
         ctx.fillStyle = "#2c3e50";
 
@@ -346,9 +430,172 @@ function drawPlayer(){
 
 }
 
+function drawGateIndicators(){
+
+    for(let i = 0; i < gates.length; i++){
+
+        const gate = gates[i];
+
+        if(gate.completed) continue;
+
+        const path = paths[i];
+
+        const start = nodes[path[0]];
+        const end = nodes[path[1]];
+
+        const midX = (start.x + end.x) / 2;
+        const midY = (start.y + end.y) / 2;
+
+        ctx.fillStyle = "#e74c3c";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            midX - camera.x,
+            midY - camera.y,
+            20,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+
+        if(activeGate === gate){
+
+            ctx.strokeStyle = "#ffffff";
+            ctx.lineWidth = 5;
+
+            ctx.beginPath();
+
+            ctx.arc(
+                midX - camera.x,
+                midY - camera.y,
+                35,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.stroke();
+
+        }
+
+    }
+
+}
+
+function drawHUD(){
+
+    ctx.fillStyle = "rgba(0,0,0,0.7)";
+
+    ctx.fillRect(
+        20,
+        20,
+        380,
+        90
+    );
+
+    ctx.fillStyle = "#ffffff";
+
+    ctx.font = "28px Arial";
+
+    ctx.fillText(
+        "Press E Near Red Gates",
+        40,
+        60
+    );
+
+    const cleared = gates.filter(
+        g => g.completed
+    ).length;
+
+    ctx.fillText(
+        "Progress: " + cleared + "/" + gates.length,
+        40,
+        95
+    );
+
+}
+
+function checkGateCollision(){
+
+    activeGate = null;
+
+    for(const gate of gates){
+
+        if(gate.completed) continue;
+
+        const path = paths[gate.pathIndex];
+
+        const start = nodes[path[0]];
+        const end = nodes[path[1]];
+
+        const midX = (start.x + end.x) / 2;
+        const midY = (start.y + end.y) / 2;
+
+        const dx = player.x - midX;
+        const dy = player.y - midY;
+
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if(dist < 80){
+
+            activeGate = gate;
+
+            if(keys["e"] && !questionOpen){
+
+                openQuestion(gate);
+            }
+
+        }
+
+    }
+
+}
+
+function openQuestion(gate){
+
+    questionOpen = true;
+
+    const q = gate.question;
+
+    const answer = prompt(
+
+        q.q +
+
+        "\\n\\n1. " + q.options[0] +
+
+        "\\n2. " + q.options[1] +
+
+        "\\n3. " + q.options[2] +
+
+        "\\n4. " + q.options[3]
+
+    );
+
+    if(Number(answer) - 1 === q.correct){
+
+        alert("Correct!");
+
+        gate.completed = true;
+    }
+    else{
+
+        alert("Wrong!");
+
+        player.x -= 200;
+    }
+
+    questionOpen = false;
+}
+
 function render(){
 
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
 
     drawBackground();
 
@@ -358,7 +605,11 @@ function render(){
 
     drawNodes();
 
+    drawGateIndicators();
+
     drawPlayer();
+
+    drawHUD();
 
 }
 
@@ -368,9 +619,12 @@ function gameLoop(){
 
     updateCamera();
 
+    checkGateCollision();
+
     render();
 
     requestAnimationFrame(gameLoop);
+
 }
 
 gameLoop();
